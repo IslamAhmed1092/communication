@@ -29,7 +29,6 @@ fs_new = 300000;
 [y2, h2] = resample (y2, fs_new, fs2);
 [y3, h3] = resample (y3, fs_new, fs3);
 % Signals
-
 t = 0:1/(length(y1)-1):T ;
 
 c1 = cos(2*pi*Fc1*t);
@@ -42,33 +41,35 @@ r3 = y3 .* c3;
 rt = y1 + y2 + y3;  
 s = y1 .* c1 + y2 .*c2 + y3 .* c3; 
 
-%w1 = ammod(y1,Fc1,fs1);
-%w2 = ammod(y2,Fc2,fs2);
-%w3 = ammod(y,Fc1,fs1);
-
 %sound(s,fs_new)
 
-%sa = dsp.SpectrumAnalyzer('SampleRate',fs, 'PlotAsTwoSidedSpectrum',false, 'YLimits',[-60 40]);
-%step(sa,w)
-%r = s .* c1
-
-%w = amodce (x, Fs, "amdsb-sc")
-
-%z = amdemod(w,Fc,Fs);
-%w = amdemod(y,Fc,Fs,0,0,num,den); 
-
-
-Y_mags = abs(fft(s));
-num_bins = length(Y_mags);
-figure('Name','AM r1');
-plot([0:1/(num_bins/2 -1):1], Y_mags(1:num_bins/2)),grid on;
-title('Magnitude spectrum of modulated signal');
-xlabel('frequency (\pi rads/sample)');
-ylabel('Magnitude');
-
-% Plot
+##Y_mags = abs(fft(s));
+##num_bins = length(Y_mags);
+##figure('Name','AM r1');
+##plot([0:1/(num_bins/2 -1):1], Y_mags(1:num_bins/2)),grid on;
+##title('Magnitude spectrum of modulated signal');
+##xlabel('frequency (\pi rads/sample)');
+##ylabel('Magnitude');
+##
+##% Plot
 figure('Name','AM Modulated');
-subplot(4,1,1); plot(t,s); title('modulated signal');
-%subplot(4,1,2); plot(t,w); title('Modulated signal');
-%subplot(4,1,3); plot(t,z); title('Demodulated signal');
-%subplot(4,1,4); plot(t,w); title('Demodulated signal (filtered)');
+subplot(4,1,1); plot(t,y1); title('modulated signal1');
+
+m1 = s .* c1 ;
+[b,a ]= butter(1,2* 25000/fs_new); 
+filtered1 = filter(b,a,m1);
+sound(filtered1,fs_new);
+subplot(4,1,2); plot(t,m1); title('extracted signal1');
+
+m2 = s .* c2 ;
+[b,a ]= butter(1,2* 25000/fs_new); 
+filtered2 = filter(b,a,m2);
+sound(filtered2,fs_new);
+
+m3 = s .* c3 ;
+[b,a ]= butter(1,2* 25000/fs_new); 
+filtered3 = filter(b,a,m3);
+sound(filtered3,fs_new);
+
+
+
